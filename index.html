@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>GHAR TAK (Loop Broken)</title>
+  <meta name="description" content="A 2D Subway-Surfers-style endless runner where a college girl walks home through a crowded Indian street. Break the loop.">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- 540x960 Logical Viewport Container -->
+  <div id="app-viewport">
+    <div id="game-container">
+      
+      <!-- Canvas 2D Surface -->
+      <canvas id="game-canvas" width="540" height="960"></canvas>
+
+      <!-- SCREEN 1: TITLE SCREEN -->
+      <div id="screen-title" class="screen-layer modal-overlay active">
+        <h1 class="game-title">GHAR TAK</h1>
+        <p class="game-tagline">Same street. Same words. Every day.</p>
+
+        <div class="game-pitch">
+          Every day, women walk home through harassment, judgment and pressure.<br>
+          This game turns those moments into obstacles.<br>
+          Dodge them. Speak up. Break the loop.
+        </div>
+
+        <div class="player-identity-bar">
+          <span class="player-icon">👤</span>
+          <span class="player-label">PLAYER:</span>
+          <strong id="title-player-name" class="player-nickname">Player</strong>
+          <button id="btn-change-profile" class="btn-profile-badge">Change</button>
+        </div>
+
+        <button id="btn-start" class="btn-primary">START WALK</button>
+        <button id="btn-my-scores" class="btn-secondary">MY SCORES</button>
+        <button id="btn-about" class="btn-secondary">ABOUT THE GAME</button>
+        <button id="btn-how-to-play" class="btn-secondary">HOW TO PLAY</button>
+        <button id="btn-settings" class="btn-secondary">SETTINGS</button>
+        <button id="btn-credits" class="btn-secondary">ASSET CREDITS</button>
+
+        <div class="content-warning">
+          <strong>Content Note:</strong> This game portrays everyday harassment and social pressure faced by women. Player discretion advised.
+        </div>
+      </div>
+
+      <!-- SCREEN 2: ABOUT THE GAME (Why this game exists) -->
+      <div id="screen-about" class="screen-layer modal-overlay">
+        <div class="card-box about-card-box">
+          <h2 class="about-heading">WHY THIS GAME EXISTS</h2>
+          <p class="about-lead">Every day, women and girls walk home through the same streets and face the same things:</p>
+
+          <div class="problem-cards-grid">
+            <div class="problem-card">
+              <div class="problem-card-header">
+                <span class="problem-icon">⚠️</span>
+                <span class="problem-title">STREET HARASSMENT</span>
+              </div>
+              <p class="problem-desc">strangers who catcall, follow and block her path.</p>
+            </div>
+
+            <div class="problem-card">
+              <div class="problem-card-header">
+                <span class="problem-icon">🗣️</span>
+                <span class="problem-title">GOSSIP & SHAMING</span>
+              </div>
+              <p class="problem-desc">neighbours judging when she comes home and who she's with.</p>
+            </div>
+
+            <div class="problem-card">
+              <div class="problem-card-header">
+                <span class="problem-icon">📄</span>
+                <span class="problem-title">MARRIAGE PRESSURE</span>
+              </div>
+              <p class="problem-desc">being pushed to marry before she's ready.</p>
+            </div>
+
+            <div class="problem-card">
+              <div class="problem-card-header">
+                <span class="problem-icon">🧣</span>
+                <span class="problem-title">DRESS-CODE POLICING</span>
+              </div>
+              <p class="problem-desc">being scolded for what she wears.</p>
+            </div>
+          </div>
+
+          <div class="about-callout">
+            <p style="font-weight: 700; color: #FFF; font-size: 14px;">For too many women this isn't a game. It's a loop.</p>
+            <p style="margin-top: 6px; font-size: 12px; color: #FFD166;">YOUR GOAL: Walk her home. Dodge what you can, endure what you can't, collect Courage and SPEAK UP to all four, until the loop breaks.</p>
+          </div>
+
+          <div class="about-guides-grid">
+            <div class="about-guide-box">
+              <div class="guide-title">CONTROLS</div>
+              <div class="guide-content">
+                <p>• <strong>Lane:</strong> Left / Right or A / D (Swipe / ◀ ▶)</p>
+                <p>• <strong>Jump:</strong> Up or W (Swipe / ▲)</p>
+                <p>• <strong>Slide:</strong> Down or S (Swipe / ▼)</p>
+                <p>• <strong>SPEAK UP:</strong> SPACE or Glowing Button</p>
+              </div>
+            </div>
+
+            <div class="about-guide-box">
+              <div class="guide-title">PICKUP LEGEND</div>
+              <div class="guide-content">
+                <p>• <strong>✨ Courage Orb:</strong> Charges SPEAK UP</p>
+                <p>• <strong>📱 Friend Call:</strong> 5s Shield</p>
+                <p>• <strong>☕ Cutting Chai:</strong> +15% Confidence</p>
+                <p>• <strong>🍶 Women's Horlicks:</strong> Speed x1.5 & Score x2</p>
+              </div>
+            </div>
+          </div>
+
+          <button id="btn-about-got-it" class="btn-primary" style="margin-top: 16px;">GOT IT</button>
+        </div>
+      </div>
+
+      <!-- SCREEN 3: HOW TO PLAY & OBSTACLE TUTORIAL -->
+      <div id="screen-how-to-play" class="screen-layer modal-overlay">
+        <div class="card-box tutorial-card-box">
+          <div class="tutorial-header">
+            <span id="tutorial-step-indicator" class="tutorial-step-badge">STEP 1 OF 5</span>
+            <button id="btn-tutorial-skip-top" class="tutorial-skip-btn" title="Skip to game">Skip ✕</button>
+          </div>
+
+          <h2 id="tutorial-title" class="tutorial-title">HOW TO PLAY</h2>
+
+          <div class="tutorial-progress-bar">
+            <div class="tutorial-dot active" data-step="1"></div>
+            <div class="tutorial-dot" data-step="2"></div>
+            <div class="tutorial-dot" data-step="3"></div>
+            <div class="tutorial-dot" data-step="4"></div>
+            <div class="tutorial-dot" data-step="5"></div>
+          </div>
+
+          <!-- Step 1: Movement & Lanes -->
+          <div class="tutorial-step-content" id="tutorial-step-1">
+            <h3 class="step-subtitle">🏃 Movement & Lane Dodging</h3>
+            <p class="step-desc">You walk down a crowded 3-lane street. Obstacles approach rapidly from the horizon.</p>
+            <div class="tutorial-diagram">
+              <div class="lane-demo-box">
+                <div class="demo-lane"><span class="demo-arrow">◀</span> Lane 1</div>
+                <div class="demo-lane active-lane"><span class="demo-hero">🚶‍♀️</span> Lane 2</div>
+                <div class="demo-lane">Lane 3 <span class="demo-arrow">▶</span></div>
+              </div>
+            </div>
+            <div class="tutorial-tips-box">
+              <p>• <strong>Keyboard:</strong> <code>A</code> / <code>D</code> or <code>◀</code> / <code>▶</code> Arrow keys</p>
+              <p>• <strong>Touch / Mobile:</strong> Tap bottom-left <code>◀</code> <code>▶</code> buttons or swipe left/right</p>
+              <p>• <strong>Goal:</strong> Switch to an empty lane before approaching hazards hit you!</p>
+            </div>
+          </div>
+
+          <!-- Step 2: Physical Obstacles (Jump & Slide) -->
+          <div class="tutorial-step-content" id="tutorial-step-2" style="display: none;">
+            <h3 class="step-subtitle">🧱 Street Hazards: Jump & Slide</h3>
+            <p class="step-desc">Physical road obstacles cannot be passed by walking. Clear them with agility:</p>
+            <div class="tutorial-hazards-grid">
+              <div class="hazard-card jump-card">
+                <div class="hazard-badge">▲ JUMP</div>
+                <div class="hazard-icons">💧 🧱 🗑️</div>
+                <div class="hazard-name">Puddles, Bricks, Garbage</div>
+                <div class="hazard-control">Press <code>W</code> / <code>▲</code> Arrow / Touch <code>▲</code></div>
+              </div>
+              <div class="hazard-card slide-card">
+                <div class="hazard-badge">▼ SLIDE</div>
+                <div class="hazard-icons">🚩 ⚡ 🏪</div>
+                <div class="hazard-name">Banners, Wires, Shop Awnings</div>
+                <div class="hazard-control">Press <code>S</code> / <code>▼</code> Arrow / Touch <code>▼</code></div>
+              </div>
+            </div>
+            <div class="tutorial-tips-box">
+              <p>• <strong>Fast-fall:</strong> Press slide while jumping to land immediately back onto the road.</p>
+            </div>
+          </div>
+
+          <!-- Step 3: The 4 Social Obstacles (People) -->
+          <div class="tutorial-step-content" id="tutorial-step-3" style="display: none;">
+            <h3 class="step-subtitle">👥 The 4 People: Social Pressures</h3>
+            <p class="step-desc">Real-world pressures women face every evening become obstacles in her path:</p>
+            <div class="people-hazards-list">
+              <div class="person-hazard-item">
+                <span class="person-hazard-icon">⚠️</span>
+                <div class="person-hazard-info">
+                  <strong>The Gunda (Street Harassment)</strong>
+                  <p>Staggering drunkards who catcall and block her path. <em>Dodge early into a free lane.</em></p>
+                </div>
+              </div>
+              <div class="person-hazard-item">
+                <span class="person-hazard-icon">🗣️</span>
+                <div class="person-hazard-info">
+                  <strong>The Gossip Aunties (Shaming)</strong>
+                  <p>Judging neighbours whose whispered gossip sweeps lanes. <em>Avoid their gossip zone.</em></p>
+                </div>
+              </div>
+              <div class="person-hazard-item">
+                <span class="person-hazard-icon">📄</span>
+                <div class="person-hazard-info">
+                  <strong>The Marriage Uncle (Marriage Pressure)</strong>
+                  <p>Pushy uncles stepping into your lane with rishta biodatas. <em>Anticipate his side-step.</em></p>
+                </div>
+              </div>
+              <div class="person-hazard-item">
+                <span class="person-hazard-icon">🧣</span>
+                <div class="person-hazard-info">
+                  <strong>The Dress-Code Aunty (Moral Policing)</strong>
+                  <p>Balcony aunties scolding clothes. <em>Slide under her swinging dupatta or switch lane.</em></p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Step 4: Pickups & Power-ups -->
+          <div class="tutorial-step-content" id="tutorial-step-4" style="display: none;">
+            <h3 class="step-subtitle">✨ Road Pickups & Boosts</h3>
+            <p class="step-desc">Collect useful roadside items to sustain your confidence and charge your voice:</p>
+            <div class="pickups-tutorial-grid">
+              <div class="pickup-tut-card">
+                <div class="pickup-tut-icon">✨</div>
+                <div>
+                  <strong>Courage Orbs</strong>
+                  <p>Charges your SPEAK UP shockwave meter (+25%).</p>
+                </div>
+              </div>
+              <div class="pickup-tut-card">
+                <div class="pickup-tut-icon">☕</div>
+                <div>
+                  <strong>Cutting Chai</strong>
+                  <p>Restores +15% Confidence health on sip.</p>
+                </div>
+              </div>
+              <div class="pickup-tut-card">
+                <div class="pickup-tut-icon">📱</div>
+                <div>
+                  <strong>Friend Call</strong>
+                  <p>Answers phone for a 5s protective shield from hits.</p>
+                </div>
+              </div>
+              <div class="pickup-tut-card">
+                <div class="pickup-tut-icon">🍶</div>
+                <div>
+                  <strong>Women's Horlicks</strong>
+                  <p>Speed x1.5 boost, score x2 multiplier, & invincibility!</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Step 5: Speak Up Power -->
+          <div class="tutorial-step-content" id="tutorial-step-5" style="display: none;">
+            <h3 class="step-subtitle">💥 SPEAK UP! & Break The Loop</h3>
+            <p class="step-desc">Silence harassment and social judgment to break free from the endless cycle:</p>
+            <div class="speak-up-showcase">
+              <div class="speak-up-hero-badge">📢 "BAS! BAHUT HO GAYA!"</div>
+              <p style="margin: 8px 0; font-size: 13px; color: #FFF;">
+                When the <strong>Courage Meter is 100% full</strong>, press <code>SPACEBAR</code> or tap the glowing <strong>SPEAK UP</strong> button.
+              </p>
+              <div class="speak-up-features">
+                <div>⚡ <strong>Slow-Mo Shockwave:</strong> Slows down time and blasts all nearby obstacles back.</div>
+                <div>🗣️ <strong>Flinch & Comeback:</strong> Silences catcallers and delivers her powerful comeback line.</div>
+                <div>🔓 <strong>Unlock All 4 Voices:</strong> Speak up to each character across days to permanently BREAK THE LOOP!</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Bottom Navigation Bar -->
+          <div class="tutorial-nav-bar">
+            <button id="btn-tutorial-prev" class="btn-secondary btn-nav" disabled>◀ PREV</button>
+            <button id="btn-tutorial-skip-bottom" class="btn-secondary btn-nav">SKIP</button>
+            <button id="btn-tutorial-next" class="btn-primary btn-nav">NEXT ▶</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- SCREEN 3: SETTINGS -->
+      <div id="screen-settings" class="screen-layer modal-overlay">
+        <div class="card-box">
+          <h2 style="color: #FFD166; margin-bottom: 20px;">SETTINGS</h2>
+          
+          <div class="settings-row">
+            <span>Show Subtitles</span>
+            <input type="checkbox" id="setting-subtitles" checked>
+          </div>
+
+          <div class="settings-row">
+            <span>Reduce Shake & Flashing</span>
+            <input type="checkbox" id="setting-reduce-effects">
+          </div>
+
+          <div style="margin: 24px 0 16px 0;">
+            <button id="btn-reset-progress" class="btn-secondary" style="color: #E63946; border-color: #E63946;">RESET PROGRESS</button>
+          </div>
+
+          <button id="btn-settings-close" class="btn-primary">SAVE & CLOSE</button>
+        </div>
+      </div>
+
+      <!-- SCREEN 4: IN-GAME HUD -->
+      <div id="screen-hud" class="screen-layer">
+        
+        <!-- Top HUD Row -->
+        <div class="hud-top-bar">
+          <!-- Confidence Bar -->
+          <div class="hud-stat-box confidence-container">
+            <span class="hud-icon">❤️</span>
+            <div class="bar-track">
+              <div id="hud-confidence-fill" class="bar-fill"></div>
+            </div>
+            <span id="hud-confidence-text" class="hud-val-text">100%</span>
+          </div>
+
+          <!-- Day Badge -->
+          <div class="hud-stat-box">
+            <div id="hud-day-counter" class="hud-day-badge"><span class="infinity-icon">∞</span> DAY 1</div>
+          </div>
+
+          <!-- Action Buttons -->
+          <div class="hud-action-btns">
+            <button id="btn-pause" class="icon-btn" title="Pause (P)">⏸️</button>
+            <button id="btn-mute" class="icon-btn" title="Mute (M)">🔊</button>
+            <button id="btn-fullscreen" class="icon-btn" title="Fullscreen">⛶</button>
+          </div>
+        </div>
+
+        <!-- Route Progress Tracker -->
+        <div class="hud-route-container">
+          <div class="route-labels">
+            <span>College Gate</span>
+            <span>Market St</span>
+            <span>Colony Lane</span>
+            <span>Home Gate</span>
+          </div>
+          <div class="route-track">
+            <div id="hud-route-fill" class="route-fill"></div>
+            <div id="hud-route-marker" class="route-marker"></div>
+          </div>
+        </div>
+
+        <!-- Secondary Bar: Voices & Score -->
+        <div class="hud-secondary-bar">
+          <div id="hud-voices-list" class="voice-badges">
+            <div id="voice-icon-drunk" class="voice-badge" title="Street Harassment">⚠️</div>
+            <div id="voice-icon-aunties" class="voice-badge" title="Gossip & Shaming">🗣️</div>
+            <div id="voice-icon-uncle" class="voice-badge" title="Marriage Pressure">📄</div>
+            <div id="voice-icon-dress_aunty" class="voice-badge" title="Dress-Code Policing">🧣</div>
+          </div>
+          <div id="hud-score-text" class="hud-score-display">SCORE: 0 · 0m</div>
+        </div>
+
+        <!-- On-Screen Control Hint Toast -->
+        <div id="hud-control-hint">Press Left/Right to change lane</div>
+
+        <!-- Non-blocking Transition Banner -->
+        <div id="hud-day-banner" class="hud-day-banner">
+          <div id="hud-banner-title" class="hud-banner-title">DAY 2</div>
+          <div id="hud-banner-subtitle" class="hud-banner-subtitle">HOME SAFE... FOR TODAY.</div>
+        </div>
+
+        <!-- Non-blocking First Encounter Problem Callout -->
+        <div id="hud-problem-callout" class="hud-problem-callout">
+          <div class="problem-callout-icon" id="callout-icon">⚠️</div>
+          <div class="problem-callout-body">
+            <div class="problem-callout-title" id="callout-title">STREET HARASSMENT</div>
+            <div class="problem-callout-desc" id="callout-desc">strangers who catcall, follow and block her path.</div>
+          </div>
+        </div>
+
+        <!-- Subtitles Overlay Box -->
+        <div id="hud-subtitle-box">
+          <div id="hud-subtitle-text">Hinglish dialogue line</div>
+          <div id="hud-subtitle-sub">(English translation)</div>
+        </div>
+
+        <!-- Bottom Controls & Touch Buttons -->
+        <div class="hud-bottom-bar">
+          <!-- Touch Left/Right Cluster -->
+          <div class="touch-cluster">
+            <button id="touch-left" class="touch-btn">◀</button>
+            <button id="touch-right" class="touch-btn">▶</button>
+          </div>
+
+          <!-- Big Glowing SPEAK UP Button -->
+          <div class="speak-up-container">
+            <div class="courage-meter-ring">
+              <div id="hud-courage-fill"></div>
+            </div>
+            <button id="hud-speak-up-btn" disabled>SPEAK<br>UP</button>
+          </div>
+
+          <!-- Touch Jump/Slide Cluster -->
+          <div class="touch-cluster">
+            <button id="touch-jump" class="touch-btn">▲</button>
+            <button id="touch-slide" class="touch-btn">▼</button>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- SCREEN 5: PAUSE OVERLAY -->
+      <div id="screen-pause" class="screen-layer modal-overlay">
+        <div class="card-box">
+          <h2 style="color: #FFD166; margin-bottom: 20px;">PAUSED</h2>
+          <button id="btn-resume" class="btn-primary">RESUME</button>
+          <button id="btn-tutorial-pause" class="btn-secondary">HOW TO PLAY / TUTORIAL</button>
+          <button id="btn-about-pause" class="btn-secondary">ABOUT THE GAME</button>
+          <button id="btn-restart" class="btn-secondary">RESTART WALK</button>
+        </div>
+      </div>
+
+      <!-- SCREEN 6: DAY COMPLETION CARD (Legacy fallback / non-blocking) -->
+      <div id="screen-day-card" class="screen-layer modal-overlay">
+        <div class="card-box">
+          <div style="font-size: 38px; margin-bottom: 10px;">🚪💥</div>
+          <h2 id="day-card-title" style="color: #FFD166; margin-bottom: 10px;">HOME SAFE... FOR TODAY.</h2>
+          <p id="day-card-msg" style="color: #FFAAA6; font-size: 15px; margin-bottom: 24px;">The door shuts. But tomorrow, the street will be there again.</p>
+          <div style="font-size: 12px; color: #888; font-style: italic;">Rewinding to morning...</div>
+        </div>
+      </div>
+
+      <!-- SCREEN 7: GAME OVER -->
+      <div id="screen-game-over" class="screen-layer modal-overlay">
+        <div class="card-box">
+          <h2 style="color: #E63946; margin-bottom: 8px;">TOO TIRED TO WALK</h2>
+          <p style="color: #AAA; font-size: 14px; margin-bottom: 18px;">The loop doesn't stop when you do.</p>
+
+          <div class="stats-grid">
+            <div class="stat-item">
+              <div class="stat-label">Days Walked</div>
+              <div id="stat-days" class="stat-val">1</div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-label">Distance</div>
+              <div id="stat-distance" class="stat-val">0 m</div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-label">Score</div>
+              <div id="stat-score" class="stat-val" style="color: #FFD166;">0</div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-label">Personal Best</div>
+              <div id="stat-best" class="stat-val" style="color: #06D6A0;">0</div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-label">Spoken Up</div>
+              <div id="stat-spoken" class="stat-val">0</div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-label">Voices Unlocked</div>
+              <div id="stat-voices" class="stat-val">0 / 4</div>
+            </div>
+          </div>
+
+          <!-- Problem Recap Section -->
+          <div class="problem-recap-box">
+            <div class="recap-header">PROBLEMS SHE FACED THIS RUN</div>
+            <div class="recap-list">
+              <div class="recap-row"><span>⚠️ STREET HARASSMENT</span><span id="stat-recap-drunk">0 faced · 0 spoken up</span></div>
+              <div class="recap-row"><span>🗣️ GOSSIP & SHAMING</span><span id="stat-recap-aunties">0 faced · 0 spoken up</span></div>
+              <div class="recap-row"><span>📄 MARRIAGE PRESSURE</span><span id="stat-recap-uncle">0 faced · 0 spoken up</span></div>
+              <div class="recap-row"><span>🧣 DRESS-CODE POLICING</span><span id="stat-recap-dress">0 faced · 0 spoken up</span></div>
+            </div>
+          </div>
+
+          <button id="btn-game-over-restart" class="btn-primary" style="margin-top: 14px;">TRY AGAIN TOMORROW</button>
+          <button id="btn-game-over-menu" class="btn-secondary">TITLE MENU</button>
+        </div>
+      </div>
+
+      <!-- SCREEN 8: "LOOP BROKEN" ENDING -->
+      <div id="screen-ending" class="screen-layer modal-overlay">
+        <div class="card-box" style="max-width: 460px; border-color: #FFD166;">
+          <div style="font-size: 44px; margin-bottom: 10px;">✨ 👭 ✨</div>
+          <h2 style="color: #FFD166; font-size: 26px; margin-bottom: 8px;">LOOP BROKEN</h2>
+          <p style="color: #FFF; font-size: 16px; font-weight: 700; margin-bottom: 6px;">"It never should have been a loop."</p>
+          <p style="color: #A8DADC; font-size: 14px; margin-bottom: 14px;">Speak up. Stand together.</p>
+
+          <p style="color: #FFD166; font-size: 15px; font-weight: 800; margin-bottom: 16px;">
+            "Kal ka raasta alag hoga."<br>
+            <span style="font-size: 12px; font-weight: 500; color: #FFAAA6;">(Tomorrow's route will be different.)</span>
+          </p>
+
+          <!-- Problem Recap Section -->
+          <div class="problem-recap-box" style="margin-bottom: 16px;">
+            <div class="recap-header">PROBLEMS SHE FACED THIS RUN</div>
+            <div class="recap-list">
+              <div class="recap-row"><span>⚠️ STREET HARASSMENT</span><span id="ending-recap-drunk">0 faced · 0 spoken up</span></div>
+              <div class="recap-row"><span>🗣️ GOSSIP & SHAMING</span><span id="ending-recap-aunties">0 faced · 0 spoken up</span></div>
+              <div class="recap-row"><span>📄 MARRIAGE PRESSURE</span><span id="ending-recap-uncle">0 faced · 0 spoken up</span></div>
+              <div class="recap-row"><span>🧣 DRESS-CODE POLICING</span><span id="ending-recap-dress">0 faced · 0 spoken up</span></div>
+            </div>
+          </div>
+
+          <div class="helpline-footer">
+            <strong>Need help in India?</strong><br>
+            Emergency: <strong>112</strong> · Women Helpline: <strong>181</strong>
+          </div>
+
+          <div style="margin-top: 16px;">
+            <button id="btn-ending-continue" class="btn-primary">KEEP WALKING (Endless)</button>
+            <button id="btn-ending-replay" class="btn-secondary">PLAY AGAIN</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- SCREEN: PLAYER PROFILE / NICKNAME -->
+      <div id="screen-profile" class="screen-layer modal-overlay">
+        <div class="card-box" style="max-width: 400px;">
+          <h2 style="color: #FFD166; margin-bottom: 8px;">PLAYER PROFILE</h2>
+          <p style="color: #CCC; font-size: 13px; line-height: 1.45; margin-bottom: 16px;">
+            Enter your nickname to save personal records on this browser:
+          </p>
+          
+          <div style="margin-bottom: 12px; text-align: left;">
+            <label for="input-nickname" style="font-size: 11px; font-weight: 800; color: #FFD166; display: block; margin-bottom: 6px;">NICKNAME (2-16 characters)</label>
+            <input type="text" id="input-nickname" maxlength="16" placeholder="Your nickname..." class="profile-input">
+            <div id="nickname-error" style="color: #E63946; font-size: 11px; margin-top: 5px; min-height: 15px;"></div>
+          </div>
+
+          <div id="profile-select-container" style="margin-bottom: 16px; text-align: left; display: none;">
+            <label for="select-existing-profile" style="font-size: 11px; font-weight: 800; color: #A8DADC; display: block; margin-bottom: 6px;">OR SWITCH EXISTING PROFILE</label>
+            <select id="select-existing-profile" class="profile-select"></select>
+          </div>
+
+          <div style="display: flex; gap: 8px;">
+            <button id="btn-profile-cancel" class="btn-secondary" style="flex: 1;">CANCEL</button>
+            <button id="btn-profile-save" class="btn-primary" style="flex: 1;">SAVE & CONTINUE</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- SCREEN: SCORE HISTORY -->
+      <div id="screen-scores" class="screen-layer modal-overlay">
+        <div class="card-box scores-card-box">
+          <h2 style="color: #FFD166; margin-bottom: 4px;">SCORE HISTORY</h2>
+          <p style="color: #AAA; font-size: 12px; margin-bottom: 12px;">Local browser records for this device</p>
+
+          <div class="profile-summary-card">
+            <div class="summary-item">
+              <div class="summary-label">PROFILE</div>
+              <div id="scores-player-name" class="summary-val" style="color: #FFF;">Player</div>
+            </div>
+            <div class="summary-item">
+              <div class="summary-label">PERSONAL BEST</div>
+              <div id="scores-best-score" class="summary-val" style="color: #FFD166;">0</div>
+            </div>
+            <div class="summary-item">
+              <div class="summary-label">TOTAL RUNS</div>
+              <div id="scores-total-walks" class="summary-val" style="color: #06D6A0;">0</div>
+            </div>
+          </div>
+
+          <div class="scores-history-container">
+            <div class="scores-table-header">
+              <span>DATE & TIME</span>
+              <span>DAYS</span>
+              <span>DIST</span>
+              <span>SCORE</span>
+            </div>
+            <div id="scores-history-list" class="scores-history-list">
+              <!-- Populated dynamically -->
+            </div>
+          </div>
+
+          <div style="display: flex; gap: 8px; margin-top: 14px;">
+            <button id="btn-scores-change-profile" class="btn-secondary" style="flex: 1;">SWITCH PROFILE</button>
+            <button id="btn-scores-close" class="btn-primary" style="flex: 1;">BACK</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- SCREEN: ASSET CREDITS -->
+      <div id="screen-credits" class="screen-layer modal-overlay">
+        <div class="card-box credits-card-box">
+          <h2 class="credits-heading">ASSET CREDITS</h2>
+          <p class="credits-subheading">GHAR TAK (Loop Broken) &mdash; Attribution &amp; Licences</p>
+
+          <div class="credits-scroll-area">
+
+            <div class="credits-section">
+              <div class="credits-section-title">🎮 GAME ENGINE &amp; CODE</div>
+              <div class="credits-item">
+                <div class="credits-name">Game Engine</div>
+                <div class="credits-detail">100% original Vanilla JavaScript (ES5/ES6), HTML5 Canvas 2D API. No external game framework used.</div>
+                <div class="credits-license">Original work &mdash; All rights reserved by the development team.</div>
+              </div>
+              <div class="credits-item">
+                <div class="credits-name">Web Audio Engine</div>
+                <div class="credits-detail">Procedural SFX, music step sequencer, and 3D stereo panning built entirely on the native <em>Web Audio API</em>.</div>
+                <div class="credits-license">Original work &mdash; No third-party audio library used.</div>
+              </div>
+              <div class="credits-item">
+                <div class="credits-name">Voice &amp; Dialogue System</div>
+                <div class="credits-detail">Character dialogue delivered via native <em>Web Speech API</em> (SpeechSynthesis) using system-installed voices. Falls back to procedural blip-talk tones.</div>
+                <div class="credits-license">Web Speech API &mdash; W3C Community Specification. System voices are provided by the user's OS and browser; no third-party voice assets bundled.</div>
+              </div>
+            </div>
+
+            <div class="credits-section">
+              <div class="credits-section-title">🎨 ART &amp; GRAPHICS</div>
+              <div class="credits-item">
+                <div class="credits-name">All Sprites &amp; Characters</div>
+                <div class="credits-detail">Every character, obstacle, environment element, pickup icon, and VFX is drawn procedurally at runtime using the HTML5 Canvas 2D drawing API. No external image files are loaded or bundled.</div>
+                <div class="credits-license">Original work &mdash; All rights reserved by the development team.</div>
+              </div>
+              <div class="credits-item">
+                <div class="credits-name">UI Icons (Emoji)</div>
+                <div class="credits-detail">Inline Unicode emoji characters (e.g. ❤️ 📢 🚶‍♀️) used in HUD labels and tutorial illustrations. Rendered by the user's OS emoji font.</div>
+                <div class="credits-license">Unicode Standard &mdash; Open standard. Specific emoji artwork rendered by the OS/browser font (Noto Emoji, Apple Color Emoji, Segoe UI Emoji, etc.). No custom emoji images bundled.</div>
+              </div>
+              <div class="credits-item">
+                <div class="credits-name">Background / Environment Art</div>
+                <div class="credits-detail">Indian street skyline, road, shop signs, streetlights, and scrolling props are drawn procedurally. All text in shop signs is fictional Hinglish.</div>
+                <div class="credits-license">Original work &mdash; All rights reserved by the development team.</div>
+              </div>
+            </div>
+
+            <div class="credits-section">
+              <div class="credits-section-title">🔤 FONTS &amp; TYPOGRAPHY</div>
+              <div class="credits-item">
+                <div class="credits-name">UI &amp; Body Font</div>
+                <div class="credits-detail">System font stack: <code>-apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, Roboto, &quot;Helvetica Neue&quot;, Arial, sans-serif</code>. No external font files loaded.</div>
+                <div class="credits-license">System fonts &mdash; Each font is owned by its respective vendor (Apple, Microsoft, Google, etc.) and is pre-installed on the user's device. No licencing required for use via CSS font stack.</div>
+              </div>
+              <div class="credits-item">
+                <div class="credits-name">Canvas Text Rendering</div>
+                <div class="credits-detail">In-game labels, subtitles, score display, and dialogue text use <code>ctx.font</code> with the same system font stack rendered directly onto the Canvas.</div>
+                <div class="credits-license">Same as above &mdash; No external font files.</div>
+              </div>
+            </div>
+
+            <div class="credits-section">
+              <div class="credits-section-title">🔊 AUDIO &amp; SOUND</div>
+              <div class="credits-item">
+                <div class="credits-name">Music</div>
+                <div class="credits-detail">Procedurally generated adaptive soundtrack using a step sequencer built on the Web Audio API. Adapts tempo and instrumentation based on game state (day/night, high danger, Speak Up).</div>
+                <div class="credits-license">Original work &mdash; All rights reserved by the development team.</div>
+              </div>
+              <div class="credits-item">
+                <div class="credits-name">Sound Effects</div>
+                <div class="credits-detail">All SFX (footsteps, heartbeat, coin collect, shockwave, coin blips, jump, slide, crash, danger pulse) are synthesised at runtime using oscillators and noise generators via the Web Audio API.</div>
+                <div class="credits-license">Original work &mdash; No external SFX library used.</div>
+              </div>
+              <div class="credits-item">
+                <div class="credits-name">Dialogue Voice Lines</div>
+                <div class="credits-detail">Character dialogues are spoken via the browser's built-in <em>SpeechSynthesis</em> API. The voice is determined by the language/pitch preset and the system voices installed on the player's device. No audio clips are bundled.</div>
+                <div class="credits-license">Web Speech API &mdash; W3C Community Specification. System voices are the user's property.</div>
+              </div>
+              <div class="credits-item">
+                <div class="credits-name">Audio assets/audio/ directory</div>
+                <div class="credits-detail">The <code>assets/audio/</code> directory is reserved for optional drop-in <code>.mp3</code> replacements. No audio files are currently bundled. The directory contains only a <code>README.md</code> placeholder.</div>
+                <div class="credits-license">N/A &mdash; No bundled audio files.</div>
+              </div>
+            </div>
+
+            <div class="credits-section">
+              <div class="credits-section-title">📦 LIBRARIES &amp; TOOLS</div>
+              <div class="credits-item">
+                <div class="credits-name">Third-party JavaScript libraries</div>
+                <div class="credits-detail">None. The game uses zero external JS dependencies, CDN links, npm packages, or frameworks.</div>
+                <div class="credits-license">N/A</div>
+              </div>
+              <div class="credits-item">
+                <div class="credits-name">Build Tools</div>
+                <div class="credits-detail">Packaged using a custom Python script (<code>tools/make-zip.py</code>). Verification via <code>tools/verify-package.py</code>. No bundler (Webpack, Vite, etc.) used.</div>
+                <div class="credits-license">Python Standard Library &mdash; PSF License. No third-party Python packages used.</div>
+              </div>
+            </div>
+
+            <div class="credits-section">
+              <div class="credits-section-title">👩‍💻 DEVELOPMENT TEAM</div>
+              <div class="credits-item">
+                <div class="credits-name">Concept, Design &amp; Narrative</div>
+                <div class="credits-detail">TODO &mdash; VERIFY CREATOR / TEAM NAME</div>
+                <div class="credits-license">&nbsp;</div>
+              </div>
+              <div class="credits-item">
+                <div class="credits-name">Game Development</div>
+                <div class="credits-detail">TODO &mdash; VERIFY DEVELOPER NAME(S)</div>
+                <div class="credits-license">&nbsp;</div>
+              </div>
+              <div class="credits-item">
+                <div class="credits-name">Theme</div>
+                <div class="credits-detail">Created for the game jam theme: <strong>LOOP</strong></div>
+                <div class="credits-license">&nbsp;</div>
+              </div>
+            </div>
+
+            <div class="credits-section">
+              <div class="credits-section-title">🙏 SPECIAL THANKS &amp; PUBLIC INTEREST</div>
+              <div class="credits-item">
+                <div class="credits-name">Emergency Helpline &mdash; India</div>
+                <div class="credits-detail"><strong>112</strong></div>
+                <div class="credits-license">&nbsp;</div>
+              </div>
+              <div class="credits-item">
+                <div class="credits-name">Women Helpline &mdash; India</div>
+                <div class="credits-detail"><strong>181</strong></div>
+                <div class="credits-license">&nbsp;</div>
+              </div>
+            </div>
+
+          </div>
+
+          <button id="btn-credits-back" class="btn-primary" style="margin-top: 12px;">&#8592; BACK</button>
+        </div>
+      </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Vanilla Scripts in Load Order (No ES Modules, Offline Ready) -->
+  <script src="src/config.js"></script>
+  <script src="src/dialogues.js"></script>
+  <script src="src/sprites.js"></script>
+  <script src="src/audio.js"></script>
+  <script src="src/input.js"></script>
+  <script src="src/spawner.js"></script>
+  <script src="src/profiles.js"></script>
+  <script src="src/ui.js"></script>
+  <script src="src/game.js"></script>
+</body>
+</html>
