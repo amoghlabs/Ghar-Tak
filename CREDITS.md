@@ -59,8 +59,8 @@ Created for the game jam theme: **LOOP**
 
 | Role | Name |
 |---|---|
-| Concept, Design & Narrative | TODO — VERIFY CREATOR / TEAM NAME |
-| Game Development | TODO — VERIFY DEVELOPER NAME(S) |
+| Concept, Design & Narrative | By Team Diet Coke |
+| Game Development | Amogh Mani Tripathi|
 
 ---
 
